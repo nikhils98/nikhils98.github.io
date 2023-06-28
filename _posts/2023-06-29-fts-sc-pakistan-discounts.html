@@ -1,0 +1,75 @@
+---
+layout: post
+title:  "Full Text Search: Standard Chartered Pakistan Discounts"
+date:   2023-06-29 01:42:00 +0500
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js">
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+  </script>
+</head>
+<body>
+  <div id="map" style="height: 500px;"></div>
+  <script>
+    const offers = []
+    let index
+
+    fetch(window.location.origin + "/data/scb-discounts.json")
+      .then((res) => res.json())
+      .then(json => {
+        const { offers: { offer } } = json
+        offers.push(...offer)
+        initIndex()
+      })
+
+    function initIndex() {
+      index = new MiniSearch({
+        fields: [
+          "name", 
+          "otitle",
+          "odesc",
+          "cat",
+          "sbcat",
+          "venue"
+        ],
+        extractField: (document, fieldName) => {
+          if(fieldName !== 'venue') {
+            return document[fieldName]
+          }
+
+          return document[fieldName].map(venue => venue.add).join('::')
+        }
+      })
+      
+      index.addAll(offers)
+    }
+
+    function search(query) {
+      const results = index.search(query, { fuzzy: 0.2 })
+      // console.log(JSON.stringify(results, null, 4));
+
+      const searchedOffers = offers.filter(offer => results.some(r => r.id === offer.id))
+      
+      console.log(JSON.stringify(searchedOffers, null, 4));
+    }
+
+    function setMapLocation(lat, lng) {
+      const map = L.map('map').setView([lat, lng], 16);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      const marker = L.marker([lat, lng]).addTo(map);
+    }
+  </script>
+</body>
+</html>
