@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Full Text Search: Standard Chartered Pakistan Discounts"
+title: "Full Text Search: Standard Chartered Pakistan Offers"
 date: 2023-06-29 01:42:00 +0500
 ---
 <!DOCTYPE html>
@@ -33,7 +33,7 @@ date: 2023-06-29 01:42:00 +0500
     init()
 
     function init() {
-      fetch(window.location.origin + "/data/scb-discounts.json")
+      fetch(window.location.origin + "/assets/fts-sc-pakistan-offers/data.json")
       .then((res) => res.json())
       .then(json => {
         const { offers: { offer } } = json
