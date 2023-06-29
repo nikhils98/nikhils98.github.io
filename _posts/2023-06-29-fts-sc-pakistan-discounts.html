@@ -1,38 +1,53 @@
 ---
 layout: post
-title:  "Full Text Search: Standard Chartered Pakistan Discounts"
-date:   2023-06-29 01:42:00 +0500
+title: "Full Text Search: Standard Chartered Pakistan Discounts"
+date: 2023-06-29 01:42:00 +0500
 ---
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="https://cdn.jsdelivr.net/npm/minisearch@6.1.0/dist/umd/index.min.js">
   </script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
-  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-  <div id="map" style="height: 500px;"></div>
+  <!-- <div id="map" style="height: 500px;"></div> -->
+  <div id="offers-block" class="grid grid-cols-3 gap-3 justify-between" style="width: 100%;">
+  </div>
+
   <script>
     const offers = []
     let index
 
-    fetch(window.location.origin + "/data/scb-discounts.json")
+    let filteredOffers = []
+
+    init()
+
+    function init() {
+      fetch(window.location.origin + "/data/scb-discounts.json")
       .then((res) => res.json())
       .then(json => {
         const { offers: { offer } } = json
-        offers.push(...offer)
+        offers.push(...offer.sort((a,b) => a.name.localeCompare(b.name)))
         initIndex()
+
+        search("")
       })
+    }
 
     function initIndex() {
       index = new MiniSearch({
         fields: [
-          "name", 
+          "name",
           "otitle",
           "odesc",
           "cat",
@@ -40,36 +55,68 @@ date:   2023-06-29 01:42:00 +0500
           "venue"
         ],
         extractField: (document, fieldName) => {
-          if(fieldName !== 'venue') {
+          if (fieldName !== 'venue') {
             return document[fieldName]
           }
 
           return document[fieldName].map(venue => venue.add).join('::')
         }
       })
-      
+
       index.addAll(offers)
     }
 
     function search(query) {
-      const results = index.search(query, { fuzzy: 0.2 })
-      // console.log(JSON.stringify(results, null, 4));
+      if(query) {
+        const results = index.search(query, { fuzzy: 0.2 })
+        const filteredOffers = offers.filter(offer => results.some(r => r.id === offer.id))
 
-      const searchedOffers = offers.filter(offer => results.some(r => r.id === offer.id))
-      
-      console.log(JSON.stringify(searchedOffers, null, 4));
+        // console.log(JSON.stringify(searchedOffers, null, 4));
+      } else {
+        filteredOffers = offers
+      }
+
+      const offerHtmlElements = filteredOffers.map(createOfferElement)
+      document.getElementById("offers-block").append(...offerHtmlElements)
     }
 
-    function setMapLocation(lat, lng) {
-      const map = L.map('map').setView([lat, lng], 16);
+    function createOfferElement(offer) {
+      const card = document.createElement('div')
+      card.classList.add(
+        'block',
+        'max-w-sm',
+        'p-6',
+        'bg-white',
+        'border',
+        'border-gray-200',
+        'rounded-lg',
+        'shadow',
+        'hover:bg-gray-100',
+        'dark:bg-gray-800',
+        'dark:border-gray-700',
+        'dark:hover:bg-gray-700'
+      )
 
-      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-      }).addTo(map);
+      const h5 = document.createElement('h5')
+      h5.classList.add(
+        'mb-2',
+        'text-2xl',
+        'font-bold',
+        'tracking-tight',
+        'text-gray-900',
+        'dark:text-white'
+      )
+      h5.textContent = offer.name
 
-      const marker = L.marker([lat, lng]).addTo(map);
+      const p = document.createElement('p')
+      p.classList.add('font-normal', 'text-gray-700', 'dark:text-gray-400')
+      p.textContent = offer.otitle
+
+      card.append(h5, p)
+
+      return card
     }
   </script>
 </body>
+
 </html>
