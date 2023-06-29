@@ -21,7 +21,7 @@ date: 2023-06-29 01:42:00 +0500
 
 <body>
   <!-- <div id="map" style="height: 500px;"></div> -->
-  <div id="offers-block" class="grid grid-cols-3 gap-3 justify-between" style="width: 100%;">
+  <div id="offers-block" class="grid grid-cols-3 gap-x-2 gap-y-4 justify-between" style="width: 100%;">
   </div>
 
   <script>
@@ -38,8 +38,8 @@ date: 2023-06-29 01:42:00 +0500
       .then(json => {
         const { offers: { offer } } = json
         offers.push(...offer.sort((a,b) => a.name.localeCompare(b.name)))
+        console.log(offers);
         initIndex()
-
         search("")
       })
     }
@@ -83,36 +83,38 @@ date: 2023-06-29 01:42:00 +0500
     function createOfferElement(offer) {
       const card = document.createElement('div')
       card.classList.add(
-        'block',
-        'max-w-sm',
-        'p-6',
         'bg-white',
-        'border',
-        'border-gray-200',
         'rounded-lg',
-        'shadow',
+        'drop-shadow-xl',
         'hover:bg-gray-100',
-        'dark:bg-gray-800',
-        'dark:border-gray-700',
-        'dark:hover:bg-gray-700'
+        'hover:cursor-pointer',
+        'text-center'
       )
 
-      const h5 = document.createElement('h5')
-      h5.classList.add(
+      const img = document.createElement('img')
+      img.src = offer.oimg
+      img.alt = `${offer.name} image`
+
+      const details = document.createElement('div')
+      details.classList.add('mt-2', 'p-2')
+
+      const name = document.createElement('h5')
+      name.classList.add(
         'mb-2',
-        'text-2xl',
+        'text-xl',
         'font-bold',
         'tracking-tight',
-        'text-gray-900',
-        'dark:text-white'
+        'text-gray-700',
       )
-      h5.textContent = offer.name
+      name.textContent = offer.name
 
-      const p = document.createElement('p')
-      p.classList.add('font-normal', 'text-gray-700', 'dark:text-gray-400')
-      p.textContent = offer.otitle
+      const title = document.createElement('p')
+      title.classList.add('text-base', 'font-normal', 'text-gray-600', 'mb-2')
+      title.textContent = offer.otitle
 
-      card.append(h5, p)
+      details.append(name, title)
+
+      card.append(img, details)
 
       return card
     }
