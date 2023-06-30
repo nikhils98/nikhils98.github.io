@@ -20,8 +20,8 @@ date: 2023-06-29 01:42:00 +0500
 </head>
 
 <body>
-  <!-- <div id="map" style="height: 500px;"></div> -->
-  <div id="offers-block" class="grid grid-cols-3 gap-x-2 gap-y-4 justify-between" style="width: 100%;">
+  <input type="text" placeholder="Search" class="my-4 p-4 w-full drop-shadow rounded-lg focus:drop-shadow-xl focus:outline-none" oninput="search(event.target.value)">
+  <div id="offers-block" class="grid grid-cols-3 gap-x-2 gap-y-4 justify-between w-full">
   </div>
 
   <script>
@@ -38,7 +38,6 @@ date: 2023-06-29 01:42:00 +0500
       .then(json => {
         const { offers: { offer } } = json
         offers.push(...offer.sort((a,b) => a.name.localeCompare(b.name)))
-        console.log(offers);
         initIndex()
         search("")
       })
@@ -69,15 +68,13 @@ date: 2023-06-29 01:42:00 +0500
     function search(query) {
       if(query) {
         const results = index.search(query, { fuzzy: 0.2 })
-        const filteredOffers = offers.filter(offer => results.some(r => r.id === offer.id))
-
-        // console.log(JSON.stringify(searchedOffers, null, 4));
+        filteredOffers = offers.filter(offer => results.some(r => r.id === offer.id))
       } else {
         filteredOffers = offers
       }
 
       const offerHtmlElements = filteredOffers.map(createOfferElement)
-      document.getElementById("offers-block").append(...offerHtmlElements)
+      document.getElementById("offers-block").replaceChildren(...offerHtmlElements)
     }
 
     function createOfferElement(offer) {
@@ -90,10 +87,13 @@ date: 2023-06-29 01:42:00 +0500
         'hover:cursor-pointer',
         'text-center'
       )
+      card.setAttribute('data-modal-target', 'defaultModal')
+      card.setAttribute('data-modal-toggle', 'defaultModal')
 
       const img = document.createElement('img')
       img.src = offer.oimg
       img.alt = `${offer.name} image`
+      img.loading = "lazy"
 
       const details = document.createElement('div')
       details.classList.add('mt-2', 'p-2')
