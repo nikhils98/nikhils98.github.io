@@ -1,12 +1,21 @@
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/staring-at-stars_mini.jpeg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>long_hair_programmer</title>
-	</head>
-	<body>
-    <slot />
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>long_hair_programmer</title>
+  </head>
+  <body>
+    <nav class="flex flex-row justify-center items-center py-4 gap-2">
+      <div class="flex-none pr-2">
+        <a href="/"><img class="flex-initial w-12 h-12" src="/favicon.png" alt="boy-on-a-hill-night-skywatching" /></a>
+      </div>
+			<a class="flex-none" href="/">Home</a>
+			<a class="flex-none">About</a>
+    </nav>
+		<div class="flex max-w-none justify-center">
+			<slot />
+		</div>
+  </body>
 </html>

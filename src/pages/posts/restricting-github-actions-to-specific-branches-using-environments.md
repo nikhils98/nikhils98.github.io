@@ -1,6 +1,7 @@
 ---
+layout: ../../layouts/PostLayout.astro
 title: Restricting Github Actions To Specific Branches Using Environments
-date: 2022-09-27 12:16:00 +0500
+date: 2022-09-27 12:16
 tags: ["github-actions"]
 ---
 
@@ -58,7 +59,7 @@ jobs:
           api-key: ${{ secrets.GHOST_ADMIN_API_KEY }}
 ```
 
-The line `environment: production` indicates that the secrets have to be read from the production environment. If the branch on which this job runs doesn't match the pattern provided in `Selected Branches` then the job will immediately fail with an error. That won't bother us here because we've specified it to run only on `main`. But if someone modifies it to include their branch as well, the job will simply throw an error!
+The line **environment: production** indicates that the secrets have to be read from the production environment. If the branch on which this job runs doesn't match the pattern provided in **Selected Branches** then the job will immediately fail with an error. That won't bother us here because we've specified it to run only on **main**. But if someone modifies it to include their branch as well, the job will simply throw an error!
 
 [ghost]: https://ghost.org/
 [ghost-theme-repo]: https://github.com/nikhils98/journal-minimalist

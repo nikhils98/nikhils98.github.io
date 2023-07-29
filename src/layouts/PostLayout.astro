@@ -1,0 +1,11 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const { title, date } = Astro.props.frontmatter;
+---
+
+<BaseLayout>
+  <div class="flex-1 w-64 leading-normal prose max-w-2xl mx-2 my-2">
+    <h1>{title}</h1>
+    <slot />
+  </div>
+</BaseLayout>
