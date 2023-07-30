@@ -1,18 +1,21 @@
+---
+import Header from "../components/Header.astro";
+---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Allison&family=Dancing+Script&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>long_hair_programmer</title>
+    <title>long hair programmer</title>
   </head>
   <body>
-    <nav class="flex flex-row justify-center items-center py-4 gap-2">
-      <div class="flex-none pr-2">
-        <a href="/"><img class="flex-initial w-12 h-12" src="/favicon.png" alt="boy-on-a-hill-night-skywatching" /></a>
-      </div>
-			<a class="flex-none" href="/">Home</a>
-			<a class="flex-none">About</a>
+    <nav class="py-6">
+      <Header />
     </nav>
 		<div class="flex max-w-none justify-center">
 			<slot />
