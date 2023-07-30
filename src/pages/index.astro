@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-const allPosts = await Astro.glob("./posts/*.md");
+const allPosts = await Astro.glob("./posts/*");
+allPosts.sort((a,b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+
 const socials = [
   {
     link: "https://www.linkedin.com/in/nikhil-satiani",
@@ -37,8 +39,7 @@ const socials = [
     <div class="py-4 fixed bottom-2 mx-2">
       <div class="flex flex-col max-w-2xl leading-tight">
         <p class="text-sm m-0 p-0">
-          I'm a software engineer. I like to code, travel and play music.
-          Occasionally I play chess and video games.
+          I'm a software engineer. I like to code, read and travel. Occasionally I play music and video games.
         </p>
         <div class="flex flex-row justify-center mt-2 gap-2">
           {
