@@ -1,19 +1,59 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 const allPosts = await Astro.glob("./posts/*.md");
+const socials = [
+  {
+    link: "https://www.linkedin.com/in/nikhil-satiani",
+    src: "/linkedin.png",
+    alt: "linkedin logo",
+  },
+  {
+    link: "https://github.com/nikhils98",
+    src: "/github.png",
+    alt: "github logo",
+  },
+  {
+    link: "https://stackoverflow.com/users/6932746/long-hair-programmer",
+    src: "/stackoverflow.png",
+    alt: "stackoverflow logo",
+  },
+];
 ---
 
 <BaseLayout>
-  <div class="prose">
+  <div class="prose relative">
     <ul>
       {
         allPosts.map((post) => (
           <li>
-            <a href={post.url}><h3>{post.frontmatter.title}</h3></a>
-						<b>Updated at: {post.frontmatter.date}</b>
+            <a href={post.url}>
+              <h3>{post.frontmatter.title}</h3>
+            </a>
+            <p class="text-sm">Updated at: {post.frontmatter.date}</p>
           </li>
         ))
       }
     </ul>
+    <div class="py-4 fixed bottom-2 mx-2">
+      <div class="flex flex-col max-w-2xl leading-tight">
+        <p class="text-sm m-0 p-0">
+          I'm a software engineer. I like to code, travel and play music.
+          Occasionally I play chess and video games.
+        </p>
+        <div class="flex flex-row justify-center mt-2 gap-2">
+          {
+            socials.map((social) => (
+              <a href={social.link}>
+                <img
+                  class="flex-initial w-6 h-6 p-0 m-0"
+                  src={social.src}
+                  alt={social.alt}
+                />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
   </div>
 </BaseLayout>
