@@ -5,7 +5,7 @@ date: 2022-09-27 12:16
 tags: ["github-actions"]
 ---
 
-*This post was originally posted on my older blog based on [Ghost][ghost]*
+_This post was originally posted on my older blog based on [Ghost][ghost]_
 
 I wanted to set up a workflow for the [frontend][ghost-theme-repo] of this blog that would trigger the deployment whenever a change was merged in main. This is what I orginally tried to accomplish it:
 
