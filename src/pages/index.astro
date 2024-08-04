@@ -24,14 +24,22 @@ const socials = [
   <div class="prose relative">
     <ul>
       {
-        allPosts.map((post) => (
-          <li>
-            <a href={post.url}>
-              <h3>{post.frontmatter.title}</h3>
-            </a>
-            <p class="text-sm">Updated at: {post.frontmatter.date}</p>
-          </li>
-        ))
+        allPosts
+          .sort((a, b) => b.frontmatter.id - a.frontmatter.id)
+          .map((post) => (
+            <li>
+              <a href={post.url}>
+                <h3>{post.frontmatter.title}</h3>
+              </a>
+              <p class="text-sm">
+                {new Date(post.frontmatter.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </li>
+          ))
       }
     </ul>
     <div class="py-4 fixed bottom-2 mx-2">
