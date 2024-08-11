@@ -18,7 +18,7 @@ Full code is hosted on [github](https://github.com/nikhils98/prefect-work-pool-h
 
 ## Flow
 
-The most fundamental object of Prefect is [flow](https://docs.prefect.io/latest/tutorial/flows/) which is essentially a decorator over a python function that helps Prefect manage its lifecycle. A flow may contain invocations to other flows (referred to as **subflows**) or [tasks](https://docs.prefect.io/latest/tutorial/tasks/).
+The most fundamental object of Prefect is [Flow](https://docs.prefect.io/latest/tutorial/flows/) which is essentially a decorator over a python function that helps Prefect manage its lifecycle. A flow may contain invocations to other flows (referred to as **subflows**) or [Tasks](https://docs.prefect.io/latest/tutorial/tasks/).
 
 For this guide we'll write a simple flow that calculates mean and median of an integer array and prints the outputs.
 
@@ -133,9 +133,9 @@ This'll create an active session in your terminal listening for scheduled runs s
 
 ## Dynamically provision infrastructure
 
-If we had a very simple flow similar to the one we've written then perhaps the above way of deploying would be sufficient and could be set up in a small EC2 instance. The scenario we're assuming, however, is that of a flow that's very resource intensive but runs infrequently. So we want to dynamically provision the infrastructre in order to save costs.
+If we had a very simple flow similar to the one we've written then perhaps the above way of deploying would be sufficient and could be set up in a small EC2 instance. The scenario we're assuming, however, is that of a flow that's very resource intensive but runs infrequently. So we want to dynamically provision the infrastructure in order to save costs.
 
-This is achieved by [work pools](https://docs.prefect.io/latest/tutorial/work-pools/) and [workers](https://docs.prefect.io/latest/tutorial/workers/). In this design, a worker process polls the server for scheduled runs of a deployment and starts a Fargate container for executing the flow accordingly. The container is automatically deprovisioned on completion of the execution.
+This is achieved by [Work pools](https://docs.prefect.io/latest/tutorial/work-pools/) and [Workers](https://docs.prefect.io/latest/tutorial/workers/). In this design, a worker process polls the server for scheduled runs of a deployment and starts a Fargate container for executing the flow accordingly. The container is automatically deprovisioned on completion of the execution.
 
 If we were using Prefect cloud, we could've just defined a work pool and let them manage the workers. But in cases where data privacy and security is of utmost importance, it may be useful to manage the workers ourselves. Note even in that case we can continue to use Prefect cloud which will  essentially behave as the server only and comes with the benefit of built-in authentication which unfortunately is not available in the community version of the server. Since we're self hosting the server too and there's no authentication module, we'll block all public access - allowing incoming SSH/RDP to select IPs whenever it's required to connect to the server.
 
@@ -256,10 +256,10 @@ You may choose to store the variables in repository variables if you like. It wi
 
 ## Test
 
-Finally we're done! Push a commit to main to trigger the workflow. Notice when the `deploy` job starts, a new Fargate task in the cluster will be initialized which will create a Deployment in the Prefect server. Since we had added a schedule in our deployment function, the flow will be trigerred automatically every 5 mins and you can observe it in the server UI and in the ECS cluster.
+Finally we're done! Push a commit to main to trigger the workflow. Notice when the `deploy` job starts, a new Fargate task in the cluster will be initialized which will create a deployment in the Prefect server. Since we had added a schedule in our deploy function, the flow will be trigerred automatically every 5 mins and you can observe it in the server UI and in the ECS cluster.
 
 It may also be worth noting that in the github action, the deploy job is not required to run everytime a new build is created unless the args to the deploy function change. This is because it refers to the `mean_and_median-latest` image which is a tag assigned to the newest image during build. So this is something that can be optimized.
 
 ---
 
-Phew! This turned out to be a lot longer than I thought because the set up is quite complex. I hope you found it useful. It is possible that some of my understanding is inaccurate and if that's the case here, I'd love to be corrected. If you have any questions or find a mistake or a better way to accomplish some of the steps here, feel free to connect.
+Phew! This turned out to be a lot longer than I thought because the set up is quite complex. I hope you found it useful. If you have any questions or find a mistake or a better way to accomplish some of the steps here, feel free to connect.
